@@ -1,0 +1,82 @@
+- content_for :page_title do
+  = @account.pretty_acct
+
+- if @account.instance_actor?
+  .flash-message.notice
+    %strong= t('accounts.instance_actor_flash')
+
+= render 'application/card', account: @account
+
+- account = @account
+- fields = account.fields
+- unless fields.empty? && account.note.blank?
+  .admin-account-bio
+    - unless fields.empty?
+      %div
+        .account__header__fields
+          - fields.each do |field|
+            %dl
+              %dt.emojify{ title: field.name }= prerender_custom_emojis(h(field.name), account.emojis)
+              %dd{ title: field.value, class: custom_field_classes(field) }
+                - if field.verified?
+                  %span.verified__mark{ title: t('accounts.link_verified_on', date: l(field.verified_at)) }
+                    = fa_icon 'check'
+                = prerender_custom_emojis(account_field_value_format(field, with_rel_me: false), account.emojis)
+
+    - if account.note.present?
+      %div
+        .account__header__content.emojify= prerender_custom_emojis(account_bio_format(account), account.emojis)
+
+= render 'admin/accounts/counters', account: @account
+
+- if @account.local? && @account.user.nil?
+  = link_to t('admin.accounts.unblock_email'), unblock_email_admin_account_path(@account.id), method: :post, class: 'button' if can?(:unblock_email, @account) && CanonicalEmailBlock.matching_account(@account).exists?
+- else
+  .table-wrapper
+    %table.table.inline-table
+      %tbody
+        - if @account.local?
+          = render 'admin/accounts/local_account', account: @account
+        - else
+          = render 'admin/accounts/remote_account', account: @account, domain_block: @domain_block
+
+  = render 'admin/accounts/buttons', account: @account, deletion_request: @deletion_request
+
+  %hr.spacer/
+
+  - unless @warnings.empty?
+
+    %h3= t 'admin.accounts.previous_strikes'
+
+    %p= t('admin.accounts.previous_strikes_description_html', count: @account.previous_strikes_count)
+
+    .account-strikes
+      = render @warnings
+
+    %hr.spacer/
+
+  %h3= t 'admin.reports.notes.title'
+
+  %p= t 'admin.reports.notes_description_html'
+
+  .report-notes
+    = render partial: 'admin/report_notes/report_note', collection: @moderation_notes
+
+  = simple_form_for @account_moderation_note, url: admin_account_moderation_notes_path do |f|
+    = f.hidden_field :target_account_id
+
+    .field-group
+      = f.input :content, placeholder: t('admin.reports.notes.placeholder'), rows: 6
+
+    .actions
+      = f.button :button, t('admin.account_moderation_notes.create'), type: :submit
+
+  %hr.spacer/
+
+  - if @account.user&.invite_request&.text.present?
+    .speech-bubble
+      .speech-bubble__bubble
+        = @account.user&.invite_request&.text
+      .speech-bubble__owner
+        = admin_account_link_to @account
+        = t('admin.accounts.invite_request_text')

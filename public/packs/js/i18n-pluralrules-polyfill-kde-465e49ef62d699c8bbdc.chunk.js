@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[171],{741:function(a,l){Intl.PluralRules&&"function"==typeof Intl.PluralRules.__addLocaleData&&Intl.PluralRules.__addLocaleData({data:{categories:{cardinal:["other"],ordinal:["other"]},fn:function(a,l){return"other"}},locale:"kde"})}}]);
+//# sourceMappingURL=i18n-pluralrules-polyfill-kde-465e49ef62d699c8bbdc.chunk.js.map

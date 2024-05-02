@@ -1,0 +1,21 @@
+- content_for :page_title do
+  = t('invites.title')
+
+- if policy(:invite).create?
+  %p= t('invites.prompt')
+
+  = simple_form_for(@invite, url: invites_path) do |form|
+    = render partial: 'form', object: form
+
+  %hr.spacer/
+
+.simple_form
+  %table.table.table--invites
+    %thead
+      %tr
+        %th
+        %th= t('invites.table.uses')
+        %th= t('invites.table.expires_at')
+        %th
+    %tbody
+      = render @invites

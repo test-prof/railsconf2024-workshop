@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[165],{735:function(a,n){Intl.PluralRules&&"function"==typeof Intl.PluralRules.__addLocaleData&&Intl.PluralRules.__addLocaleData({data:{categories:{cardinal:["one","other"],ordinal:["other"]},fn:function(a,n){return n?"other":a>=0&&a<2?"one":"other"}},locale:"kab"})}}]);
+//# sourceMappingURL=i18n-pluralrules-polyfill-kab-71fa9dd7908949b05cf4.chunk.js.map

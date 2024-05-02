@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[49],{619:function(a,e){Intl.PluralRules&&"function"==typeof Intl.PluralRules.__addLocaleData&&Intl.PluralRules.__addLocaleData({data:{categories:{cardinal:["one","other"],ordinal:["other"]},fn:function(a,e){var l=String(a).split("."),n=l[0],o=l[1]||"",t=!l[1],r=n.slice(-1),c=o.slice(-1);return e?"other":t&&(1==n||2==n||3==n)||t&&4!=r&&6!=r&&9!=r||!t&&4!=c&&6!=c&&9!=c?"one":"other"}},locale:"ceb"})}}]);
+//# sourceMappingURL=i18n-pluralrules-polyfill-ceb-705dfeeba4181707d9f1.chunk.js.map

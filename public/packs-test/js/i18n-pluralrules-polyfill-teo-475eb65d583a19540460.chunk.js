@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[369],{939:function(a,o){Intl.PluralRules&&"function"==typeof Intl.PluralRules.__addLocaleData&&Intl.PluralRules.__addLocaleData({data:{categories:{cardinal:["one","other"],ordinal:["other"]},fn:function(a,o){return o?"other":1==a?"one":"other"}},locale:"teo"})}}]);
+//# sourceMappingURL=i18n-pluralrules-polyfill-teo-475eb65d583a19540460.chunk.js.map

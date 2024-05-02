@@ -1,0 +1,127 @@
+---
+kab:
+  activerecord:
+    attributes:
+      doorkeeper/application:
+        name: Isem n usnas
+        redirect_uri: URI n uwelleh
+        website: Asmel web n usnas
+    errors:
+      models:
+        doorkeeper/application:
+          attributes:
+            redirect_uri:
+              fragment_present: ur yezmir ad yegber afrur.
+              invalid_uri: ilaq ad tili d tansa URL tameɣtut.
+              relative_uri: ilaq ad yili d URI amagdaz.
+              secured_uri: ilaq URI ad yili HTTPS/SSL.
+  doorkeeper:
+    applications:
+      buttons:
+        authorize: Ssireg
+        cancel: Sefsex
+        destroy: Hudd
+        edit: Ẓreg
+        submit: Azen
+      confirmations:
+        destroy: Tetḥeqqeḍ?
+      edit:
+        title: Ẓreg asnas
+      form:
+        error: Ay ay! Senqed tiferkit-inek ma ulac deg-s tuccḍiwin
+      help:
+        native_redirect_uri: Seqdec %{native_redirect_uri} i yisekyaden idiganen
+        redirect_uri: Seqdec yiwen n ujerrid i yal URI
+      index:
+        application: Asnas
+        callback_url: URL n tririt n wawal
+        delete: Kkes
+        empty: Ulac ɣur-k·m isnasen.
+        name: Isem
+        new: Asnas amaynut
+        show: Ẓer
+        title: Isnasen-ik·im
+      new:
+        title: Asnas amaynut
+      show:
+        actions: Tigawin
+        application_id: ID n usnas
+        callback_urls: URL n tririt n wawal
+        title: 'Asnas: %{name}'
+    authorizations:
+      buttons:
+        authorize: Ssireg
+        deny: Aggi
+      error:
+        title: Tella-d tuccḍa
+      new:
+        title: Tlaq tsiregt
+      show:
+        title: Nɣel tangalt n wurag sakkin senteḍ-itt deg usnas.
+    authorized_applications:
+      buttons:
+        revoke: Ḥwi
+      confirmations:
+        revoke: Tetḥeqqeḍ?
+      index:
+        description_html: Ha-t-an yisnasen i izemren ad kecmen ɣer umiḍan-ik·im, s useqdec n API. Ma llan yisnasen ur teεqileḍ ara da, neɣ kra n wesnas ur iteddu ara akken ilaq, tzemreḍ ad tekkseḍ anekcum-is.
+        last_used_at: Yettwaseqdec i tikkelt taneggarut ass n %{date}
+        title: Isnasen-ik·im yettusirgen
+    errors:
+      messages:
+        invalid_redirect_uri: URI n uwelleh mačči d ameγtu.
+    flash:
+      applications:
+        create:
+          notice: Asnas yettwarna-d.
+        destroy:
+          notice: Asnan yettwakkes.
+        update:
+          notice: Asnan yettwalqem.
+      authorized_applications:
+        destroy:
+          notice: Yettwaḥwi wesnas.
+    grouped_scopes:
+      title:
+        accounts: Imiḍanen
+        admin/accounts: Tadbelt n imiḍan
+        crypto: Awgelhen seg yixef ɣer yixef
+        filters: Imzizdigen
+        lists: Tibdarin
+        notifications: Tilɣa
+        push: Tilɣa yettudemmren
+        reports: Ineqqisen
+        search: Nadi
+        statuses: Tisuffaɣ
+    layouts:
+      admin:
+        nav:
+          applications: Isnasen
+      application:
+        title: Tlaq tsiregt n OAuth
+    scopes:
+      admin:read: ad iɣeṛ akk isefka ɣef uqeddac
+      admin:write: ẓreg akk isefka γef uqeddac
+      follow: beddel assaγen n umiḍan
+      push: ṭṭef-d tilγa-ik yettwademren
+      read: γeṛ akk isefka n umiḍan-ik
+      read:accounts: ẓer isallen n yimiḍanen
+      read:blocks: ẓer imiḍanen i tesḥebseḍ
+      read:bookmarks: ẓer ticraḍ-ik
+      read:filters: ad iẓer imsizdigen-ik·im
+      read:follows: ẓer imeḍfaṛen-ik
+      read:lists: ẓer tibdarin-ik·im
+      read:mutes: ẓer wid i tesgugmeḍ
+      read:notifications: ad ẓer tilɣa-inek·inem
+      read:reports: ẓer ineqqisen-ik·im
+      read:search: anadi deg umkan-ik·im
+      read:statuses: ẓer meṛṛa tisuffaɣ
+      write: beddel meṛṛa isefka n umiḍan-ik
+      write:accounts: ad iẓreg amaɣnu-ik·im
+      write:blocks: seḥbes imiḍanen d tγula
+      write:bookmarks: ad yernu tisuffaɣ ɣer ticraḍ
+      write:filters: ad isnulfu imsizedgen
+      write:follows: ḍfeṛ imdanen
+      write:lists: ad yesnulfu tibdarin
+      write:media: ad yessali ifuyla n umidya
+      write:notifications: sfeḍ tilɣa-k·m

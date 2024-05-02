@@ -1,0 +1,29 @@
+- content_for :page_title do
+  = t('auth.set_new_password')
+
+= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, novalidate: false }) do |f|
+  = render 'shared/error_messages', object: resource
+
+  - if !use_seamless_external_login? || resource.encrypted_password.present?
+    = f.input :reset_password_token, as: :hidden
+
+    .fields-group
+      = f.input :password,
+                autofocus: true,
+                input_html: { 'aria-label': t('simple_form.labels.defaults.new_password'), autocomplete: 'new-password', minlength: User.password_length.first, maxlength: User.password_length.last },
+                label: t('simple_form.labels.defaults.new_password'),
+                required: true,
+                wrapper: :with_label
+    .fields-group
+      = f.input :password_confirmation,
+                input_html: { 'aria-label': t('simple_form.labels.defaults.confirm_new_password'), autocomplete: 'new-password' },
+                label: t('simple_form.labels.defaults.confirm_new_password'),
+                required: true,
+                wrapper: :with_label
+
+    .actions
+      = f.button :button, t('auth.set_new_password'), type: :submit
+  - else
+    %p.hint= t('users.seamless_external_login')
+
+.form-footer= render 'auth/shared/links'

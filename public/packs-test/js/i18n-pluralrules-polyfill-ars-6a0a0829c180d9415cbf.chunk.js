@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[11],{581:function(a,e){Intl.PluralRules&&"function"==typeof Intl.PluralRules.__addLocaleData&&Intl.PluralRules.__addLocaleData({data:{categories:{cardinal:["zero","one","two","few","many","other"],ordinal:["other"]},fn:function(a,e){var o=String(a).split("."),n=Number(o[0])==a&&o[0].slice(-2);return e?"other":0==a?"zero":1==a?"one":2==a?"two":n>=3&&n<=10?"few":n>=11&&n<=99?"many":"other"}},locale:"ars"})}}]);
+//# sourceMappingURL=i18n-pluralrules-polyfill-ars-6a0a0829c180d9415cbf.chunk.js.map

@@ -1,0 +1,113 @@
+x-app: &app
+  # build:
+  #   context: .
+  #   args:
+  #     RUBY_VERSION: '3.2'
+  #     PG_MAJOR: '14'
+  #     NODE_VERSION: '20'
+  # image: mastodon-dev:1.0.0
+  image: palkan/mastodon-test-prof:1.0.0
+  environment: &env
+    NODE_ENV: ${NODE_ENV:-development}
+    RAILS_ENV: ${RAILS_ENV:-development}
+  tmpfs:
+    - /tmp
+    - /app/tmp/pids
+
+x-backend: &backend
+  <<: *app
+  stdin_open: true
+  tty: true
+  volumes:
+    - ..:/app:cached
+    - rails_cache:/app/tmp/cache
+    - rails_logs:/app/log
+    - node_modules:/app/node_modules
+    - history:/usr/local/hist
+    - storage:/app/public/system
+    - ./.psqlrc:/root/.psqlrc:ro
+    - ./.bashrc:/root/.bashrc:ro
+  environment: &backend_environment
+    <<: *env
+    BIND: 0.0.0.0
+    REDIS_HOST: redis
+    REDIS_PORT: '6379'
+    DB_HOST: postgres
+    DB_USER: postgres
+    DB_PASS: postgres
+    DB_PORT: '5432'
+    ES_ENABLED: 'false'
+    REDIS_URL: redis://redis:6379/
+    DATABASE_URL: postgres://postgres:postgres@postgres:5432
+    MALLOC_ARENA_MAX: 2
+    WEB_CONCURRENCY: ${WEB_CONCURRENCY:-1}
+    BOOTSNAP_CACHE_DIR: /app/tmp/cache/bootsnap
+    XDG_DATA_HOME: /app/tmp/cache
+    YARN_CACHE_FOLDER: /app/node_modules/.yarn-cache
+    HISTFILE: /usr/local/hist/.bash_history
+    PSQL_HISTFILE: /usr/local/hist/.psql_history
+    IRB_HISTFILE: /usr/local/hist/.irb_history
+    EDITOR: vi
+  depends_on:
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+
+services:
+  rails:
+    <<: *backend
+    command: bundle exec rails
+
+  web:
+    <<: *backend
+    command: bundle exec rails server -b 0.0.0.0
+    ports:
+      - '3000:3000'
+    depends_on:
+      sidekiq:
+        condition: service_started
+
+  sidekiq:
+    <<: *backend
+    command: bundle exec sidekiq
+
+  postgres:
+    image: postgres:14
+    volumes:
+      - .psqlrc:/root/.psqlrc:ro
+      - postgres:/var/lib/postgresql/data
+      - history:/usr/local/hist
+    environment:
+      PSQL_HISTFILE: /usr/local/hist/.psql_history
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - 5432
+    healthcheck:
+      test: pg_isready -U postgres -h 127.0.0.1
+      interval: 5s
+
+  redis:
+    image: redis:7.0-alpine
+    volumes:
+      - redis:/data
+    ports:
+      - 6379
+    healthcheck:
+      test: redis-cli ping
+      interval: 1s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  bundle:
+  node_modules:
+  history:
+  rails_cache:
+  rails_logs:
+  postgres:
+  redis:
+  storage:

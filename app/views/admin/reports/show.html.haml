@@ -1,0 +1,97 @@
+- content_for :page_title do
+  = t('admin.reports.report', id: @report.id)
+
+- content_for :heading_actions do
+  - if @report.unresolved?
+    = link_to t('admin.reports.mark_as_resolved'), resolve_admin_report_path(@report), method: :post, class: 'button'
+  - else
+    = link_to t('admin.reports.mark_as_unresolved'), reopen_admin_report_path(@report), method: :post, class: 'button'
+
+- unless @report.account.local? || @report.target_account.local?
+  .flash-message= t('admin.reports.forwarded_replies_explanation')
+
+.report-header
+  = render 'admin/reports/header_card', report: @report
+  = render 'admin/reports/header_details', report: @report
+
+%hr.spacer
+
+%h3= t 'admin.reports.category'
+
+%p= t 'admin.reports.category_description_html'
+
+= react_admin_component :report_reason_selector,
+                        category: @report.category,
+                        disabled: @report.action_taken?,
+                        id: @report.id,
+                        rule_ids: @report.rule_ids&.map(&:to_s)
+
+- if @report.comment.present?
+  = render 'admin/reports/comment', report: @report
+
+%hr.spacer/
+
+%h3
+  = t 'admin.reports.statuses'
+  %small.section-skip-link
+    = link_to '#actions' do
+      = fa_icon 'angle-double-down'
+      = t('admin.reports.skip_to_actions')
+
+%p
+  = t 'admin.reports.statuses_description_html'
+  —
+  = link_to safe_join([fa_icon('plus'), t('admin.reports.add_to_report')]),
+            admin_account_statuses_path(@report.target_account_id, report_id: @report.id),
+            class: 'table-action-link'
+
+= form_for(@form, url: batch_admin_account_statuses_path(@report.target_account_id, report_id: @report.id)) do |f|
+  .batch-table
+    .batch-table__toolbar
+      %label.batch-table__toolbar__select.batch-checkbox-all
+        = check_box_tag :batch_checkbox_all, nil, false
+      .batch-table__toolbar__actions
+        - if !@statuses.empty? && @report.unresolved?
+          = f.button safe_join([fa_icon('times'), t('admin.statuses.batch.remove_from_report')]), name: :remove_from_report, class: 'table-action-link', type: :submit
+    .batch-table__body
+      - if @statuses.empty?
+        = nothing_here 'nothing-here--under-tabs'
+      - else
+        = render partial: 'admin/reports/status', collection: @statuses, locals: { f: f }
+
+- if @report.unresolved?
+  %hr.spacer/
+
+  %p#actions= t(@report.target_account.local? ? 'admin.reports.actions_description_html' : 'admin.reports.actions_description_remote_html')
+
+  = render partial: 'admin/reports/actions', locals: { report: @report, statuses: @statuses }
+
+- unless @action_logs.empty?
+  %hr.spacer/
+
+  %h3= t 'admin.reports.action_log'
+
+  .report-notes
+    = render @action_logs
+
+%hr.spacer/
+
+%h3= t 'admin.reports.notes.title'
+
+%p= t 'admin.reports.notes_description_html'
+
+.report-notes
+  = render @report_notes
+
+= simple_form_for @report_note, url: admin_report_notes_path do |f|
+  = f.input :report_id, as: :hidden
+
+  .field-group
+    = f.input :content, placeholder: t('admin.reports.notes.placeholder'), rows: 6
+
+  .actions
+    - if @report.unresolved?
+      = f.button :button, t('admin.reports.notes.create_and_resolve'), name: :create_and_resolve, type: :submit
+    - else
+      = f.button :button, t('admin.reports.notes.create_and_unresolve'), name: :create_and_unresolve, type: :submit
+    = f.button :button, t('admin.reports.notes.create'), type: :submit

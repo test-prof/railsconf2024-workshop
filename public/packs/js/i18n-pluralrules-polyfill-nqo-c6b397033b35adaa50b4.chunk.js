@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[257],{827:function(a,l){Intl.PluralRules&&"function"==typeof Intl.PluralRules.__addLocaleData&&Intl.PluralRules.__addLocaleData({data:{categories:{cardinal:["other"],ordinal:["other"]},fn:function(a,l){return"other"}},locale:"nqo"})}}]);
+//# sourceMappingURL=i18n-pluralrules-polyfill-nqo-c6b397033b35adaa50b4.chunk.js.map

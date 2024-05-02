@@ -1,0 +1,10 @@
+.log-entry
+  .log-entry__header
+    .log-entry__avatar
+      .indicator-icon{ class: login_activity.success? ? 'success' : 'failure' }
+        = fa_icon login_activity.success? ? 'check' : 'times'
+    .log-entry__content
+      .log-entry__title
+        = login_activity_title(login_activity)
+      .log-entry__timestamp
+        %time.formatted{ datetime: login_activity.created_at.iso8601 }= l(login_activity.created_at)

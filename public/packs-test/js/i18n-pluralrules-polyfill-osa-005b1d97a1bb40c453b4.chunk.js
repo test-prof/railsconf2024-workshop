@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[273],{843:function(a,l){Intl.PluralRules&&"function"==typeof Intl.PluralRules.__addLocaleData&&Intl.PluralRules.__addLocaleData({data:{categories:{cardinal:["other"],ordinal:["other"]},fn:function(a,l){return"other"}},locale:"osa"})}}]);
+//# sourceMappingURL=i18n-pluralrules-polyfill-osa-005b1d97a1bb40c453b4.chunk.js.map
