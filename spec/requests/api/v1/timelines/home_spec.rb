@@ -37,7 +37,7 @@ describe 'Home' do
         expect(response).to have_http_status(200)
       end
 
-      it 'returns the statuses of followed users' do
+      it 'returns the statuses of followed users', sidekiq: :inline do
         subject
 
         expect(body_as_json.pluck(:id)).to match_array(home_statuses.map { |status| status.id.to_s })
@@ -46,13 +46,13 @@ describe 'Home' do
       context 'with limit param' do
         let(:params) { { limit: 1 } }
 
-        it 'returns only the requested number of statuses' do
+        it 'returns only the requested number of statuses', sidekiq: :inline do
           subject
 
           expect(body_as_json.size).to eq(params[:limit])
         end
 
-        it 'sets the correct pagination headers', :aggregate_failures do
+        it 'sets the correct pagination headers', :aggregate_failures, sidekiq: :inline do
           subject
 
           expect(response)

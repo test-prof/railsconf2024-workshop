@@ -75,7 +75,7 @@ RSpec.describe DeleteAccountService do
       let(:account) { Fabricate(:account) }
       let(:local_follower) { Fabricate(:account) }
 
-      it 'sends a delete actor activity to all known inboxes' do
+      it 'sends a delete actor activity to all known inboxes', sidekiq: :inline do
         subject
         expect(a_request(:post, remote_alice.inbox_url)).to have_been_made.once
         expect(a_request(:post, remote_bob.inbox_url)).to have_been_made.once
@@ -92,7 +92,7 @@ RSpec.describe DeleteAccountService do
       let(:account) { Fabricate(:account, inbox_url: 'https://bob.com/inbox', protocol: :activitypub, domain: 'bob.com') }
       let(:local_follower) { Fabricate(:account) }
 
-      it 'sends expected activities to followed and follower inboxes' do
+      it 'sends expected activities to followed and follower inboxes', sidekiq: :inline do
         subject
 
         expect(post_to_inbox_with_reject).to have_been_made.once

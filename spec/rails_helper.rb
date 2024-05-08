@@ -47,6 +47,36 @@ Devise::Test::ControllerHelpers.module_eval do
   end
 end
 
+TestProf::EventProf.monitor(
+  Paperclip::Attachment,
+  "paperclip.post_process",
+  :post_process
+)
+
+module Paperclip
+  module Testing
+    class << self
+      def fake! = @fake = true
+      def real! = @fake = false
+      def fake? = @fake
+    end
+  end
+end
+
+Paperclip::Attachment.prepend(Module.new do
+  def post_process(...)
+    return true if Paperclip::Testing.fake?
+
+    super
+  end
+end)
+
+require "test_prof/recipes/rspec/let_it_be"
+
+TestProf::LetItBe.configure do |config|
+  config.default_modifiers[:refind] = true
+end
+
 RSpec.configure do |config|
   # This is set before running spec:system, see lib/tasks/tests.rake
   config.filter_run_excluding type: lambda { |type|
@@ -97,8 +127,26 @@ RSpec.configure do |config|
     self.use_transactional_tests = true
   end
 
-  config.before(:each) do
-    Sidekiq::Testing.inline!
+  sidekiq_fake_types = %w[request model service controller]
+
+  config.before(:each) do |example|
+    if example.metadata[:type].to_s.in?(sidekiq_fake_types) &&
+      (example.metadata[:sidekiq] != :inline)
+      Sidekiq::Testing.fake!
+    else
+      Sidekiq::Testing.inline!
+    end
+  end
+
+  paperclip_stub_types = %w[model request service controller]
+
+  config.before(:each) do |example|
+    if example.metadata[:type].to_s.in?(paperclip_stub_types) &&
+      (example.metadata[:paperclip] != :process)
+      Paperclip::Testing.fake!
+    else
+      Paperclip::Testing.real!
+    end
   end
 
   config.before :each, type: :cli do
@@ -113,7 +161,7 @@ RSpec.configure do |config|
     allow(Resolv::DNS).to receive(:open).and_raise('Real DNS queries are disabled, stub Resolv::DNS as needed') unless example.metadata[:type] == :system
   end
 
-  config.after do
+  config.after do |example|
     Rails.cache.clear
     redis.del(redis.keys)
   end

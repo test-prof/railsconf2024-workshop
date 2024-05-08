@@ -21,7 +21,7 @@ RSpec.describe ImportService do
     describe 'when no accounts are muted' do
       let(:import) { Import.create(account: account, type: 'muting', data: csv) }
 
-      it 'mutes the listed accounts, including notifications' do
+      it 'mutes the listed accounts, including notifications', sidekiq: :inline do
         subject.call(import)
         expect(account.muting.count).to eq 2
         expect(Mute.find_by(account: account, target_account: bob).hide_notifications).to be true
@@ -31,7 +31,7 @@ RSpec.describe ImportService do
     describe 'when some accounts are muted and overwrite is not set' do
       let(:import) { Import.create(account: account, type: 'muting', data: csv) }
 
-      it 'mutes the listed accounts, including notifications' do
+      it 'mutes the listed accounts, including notifications', sidekiq: :inline do
         account.mute!(bob, notifications: false)
         subject.call(import)
         expect(account.muting.count).to eq 2
@@ -42,7 +42,7 @@ RSpec.describe ImportService do
     describe 'when some accounts are muted and overwrite is set' do
       let(:import) { Import.create(account: account, type: 'muting', data: csv, overwrite: true) }
 
-      it 'mutes the listed accounts, including notifications' do
+      it 'mutes the listed accounts, including notifications', sidekiq: :inline do
         account.mute!(bob, notifications: false)
         subject.call(import)
         expect(account.muting.count).to eq 2
@@ -59,7 +59,7 @@ RSpec.describe ImportService do
     describe 'when no accounts are muted' do
       let(:import) { Import.create(account: account, type: 'muting', data: csv) }
 
-      it 'mutes the listed accounts, respecting notifications' do
+      it 'mutes the listed accounts, respecting notifications', sidekiq: :inline do
         subject.call(import)
         expect(account.muting.count).to eq 2
         expect(Mute.find_by(account: account, target_account: bob).hide_notifications).to be true
@@ -70,7 +70,7 @@ RSpec.describe ImportService do
     describe 'when some accounts are muted and overwrite is not set' do
       let(:import) { Import.create(account: account, type: 'muting', data: csv) }
 
-      it 'mutes the listed accounts, respecting notifications' do
+      it 'mutes the listed accounts, respecting notifications', sidekiq: :inline do
         account.mute!(bob, notifications: true)
         subject.call(import)
         expect(account.muting.count).to eq 2
@@ -82,7 +82,7 @@ RSpec.describe ImportService do
     describe 'when some accounts are muted and overwrite is set' do
       let(:import) { Import.create(account: account, type: 'muting', data: csv, overwrite: true) }
 
-      it 'mutes the listed accounts, respecting notifications' do
+      it 'mutes the listed accounts, respecting notifications', sidekiq: :inline do
         account.mute!(bob, notifications: true)
         subject.call(import)
         expect(account.muting.count).to eq 2
@@ -100,7 +100,7 @@ RSpec.describe ImportService do
     describe 'when no accounts are followed' do
       let(:import) { Import.create(account: account, type: 'following', data: csv) }
 
-      it 'follows the listed accounts, including boosts' do
+      it 'follows the listed accounts, including boosts', sidekiq: :inline do
         subject.call(import)
 
         expect(account.following.count).to eq 1
@@ -112,7 +112,7 @@ RSpec.describe ImportService do
     describe 'when some accounts are already followed and overwrite is not set' do
       let(:import) { Import.create(account: account, type: 'following', data: csv) }
 
-      it 'follows the listed accounts, including notifications' do
+      it 'follows the listed accounts, including notifications', sidekiq: :inline do
         account.follow!(bob, reblogs: false)
         subject.call(import)
         expect(account.following.count).to eq 1
@@ -124,7 +124,7 @@ RSpec.describe ImportService do
     describe 'when some accounts are already followed and overwrite is set' do
       let(:import) { Import.create(account: account, type: 'following', data: csv, overwrite: true) }
 
-      it 'mutes the listed accounts, including notifications' do
+      it 'mutes the listed accounts, including notifications', sidekiq: :inline do
         account.follow!(bob, reblogs: false)
         subject.call(import)
         expect(account.following.count).to eq 1
@@ -142,7 +142,7 @@ RSpec.describe ImportService do
     describe 'when no accounts are followed' do
       let(:import) { Import.create(account: account, type: 'following', data: csv) }
 
-      it 'follows the listed accounts, respecting boosts' do
+      it 'follows the listed accounts, respecting boosts', sidekiq: :inline do
         subject.call(import)
         expect(account.following.count).to eq 1
         expect(account.follow_requests.count).to eq 1
@@ -154,7 +154,7 @@ RSpec.describe ImportService do
     describe 'when some accounts are already followed and overwrite is not set' do
       let(:import) { Import.create(account: account, type: 'following', data: csv) }
 
-      it 'mutes the listed accounts, respecting notifications' do
+      it 'mutes the listed accounts, respecting notifications', sidekiq: :inline do
         account.follow!(bob, reblogs: true)
         subject.call(import)
         expect(account.following.count).to eq 1
@@ -167,7 +167,7 @@ RSpec.describe ImportService do
     describe 'when some accounts are already followed and overwrite is set' do
       let(:import) { Import.create(account: account, type: 'following', data: csv, overwrite: true) }
 
-      it 'mutes the listed accounts, respecting notifications' do
+      it 'mutes the listed accounts, respecting notifications', sidekiq: :inline do
         account.follow!(bob, reblogs: true)
         subject.call(import)
         expect(account.following.count).to eq 1
@@ -193,7 +193,7 @@ RSpec.describe ImportService do
       stub_request(:post, nare.inbox_url).to_return(status: 200)
     end
 
-    it 'follows the listed account' do
+    it 'follows the listed account', sidekiq: :inline do
       expect(account.follow_requests.count).to eq 0
       subject.call(import)
       expect(account.follow_requests.count).to eq 1

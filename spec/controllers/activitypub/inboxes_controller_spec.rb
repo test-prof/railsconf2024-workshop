@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe ActivityPub::InboxesController do
+RSpec.describe ActivityPub::InboxesController, :account do
   let(:remote_account) { nil }
 
   before do
@@ -23,8 +23,6 @@ RSpec.describe ActivityPub::InboxesController do
 
       context 'with a specific account' do
         subject(:response) { post :create, params: { account_username: account.username }, body: '{}' }
-
-        let(:account) { Fabricate(:account) }
 
         context 'when account is permanently suspended' do
           before do

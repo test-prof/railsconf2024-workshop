@@ -33,7 +33,7 @@ RSpec.describe RemoveFromFollowersService do
       expect(bob.followed_by?(sender)).to be false
     end
 
-    it 'sends a reject activity' do
+    it 'sends a reject activity', sidekiq: :inline do
       expect(a_request(:post, sender.inbox_url)).to have_been_made.once
     end
   end

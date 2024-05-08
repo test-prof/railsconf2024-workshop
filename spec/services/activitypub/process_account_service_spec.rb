@@ -224,7 +224,7 @@ RSpec.describe ActivityPub::ProcessAccountService do
       end
     end
 
-    it 'creates accounts without exceeding rate limit' do
+    it 'creates accounts without exceeding rate limit', sidekiq: :inline do
       expect { subject.call('user1', 'foo.test', payload) }
         .to create_some_remote_accounts
         .and create_fewer_than_rate_limit_accounts

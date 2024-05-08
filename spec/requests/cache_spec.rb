@@ -170,7 +170,7 @@ describe 'Caching behavior' do
   let(:user) { User.find_by(email: 'user@host.example') }
   let(:token) { Doorkeeper::AccessToken.find_by(resource_owner_id: user.id) }
 
-  before do
+  before_all do
     alice = Fabricate(:account, username: 'alice')
     user = Fabricate(:user, email: 'user@host.example', role: UserRole.find_by(name: 'Moderator'))
     status = Fabricate(:status, account: alice, id: 110_224_538_612_341_312)

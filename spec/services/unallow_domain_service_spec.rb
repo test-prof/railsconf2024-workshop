@@ -19,7 +19,7 @@ RSpec.describe UnallowDomainService do
     end
 
     describe '#call' do
-      it 'makes the domain not allowed and removes accounts from that domain' do
+      it 'makes the domain not allowed and removes accounts from that domain', sidekiq: :inline do
         expect { subject.call(domain_allow) }
           .to change { bad_domain_allowed }.from(true).to(false)
           .and change { bad_domain_account_exists }.from(true).to(false)

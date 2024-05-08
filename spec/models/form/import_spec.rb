@@ -2,10 +2,9 @@
 
 require 'rails_helper'
 
-RSpec.describe Form::Import do
+RSpec.describe Form::Import, :account do
   subject { described_class.new(current_account: account, type: import_type, mode: import_mode, data: data) }
 
-  let(:account)     { Fabricate(:account) }
   let(:data)        { fixture_file_upload(import_file) }
   let(:import_mode) { 'merge' }
 

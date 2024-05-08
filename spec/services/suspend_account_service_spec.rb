@@ -59,7 +59,7 @@ RSpec.describe SuspendAccountService do
         remote_follower.follow!(account)
       end
 
-      it 'sends an Update actor activity to followers and reporters' do
+      it 'sends an Update actor activity to followers and reporters', sidekiq: :inline do
         subject
         expect(a_request(:post, remote_follower.inbox_url).with { |req| match_update_actor_request(req, account) }).to have_been_made.once
         expect(a_request(:post, remote_reporter.inbox_url).with { |req| match_update_actor_request(req, account) }).to have_been_made.once
@@ -85,7 +85,7 @@ RSpec.describe SuspendAccountService do
         account.follow!(local_followee)
       end
 
-      it 'sends a Reject Follow activity', :aggregate_failures do
+      it 'sends a Reject Follow activity', :aggregate_failures, sidekiq: :inline do
         subject
 
         expect(a_request(:post, account.inbox_url).with { |req| match_reject_follow_request(req, account, local_followee) }).to have_been_made.once

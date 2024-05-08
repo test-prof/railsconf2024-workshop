@@ -2,8 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe ActivityPub::FollowersSynchronizationsController do
-  let!(:account) { Fabricate(:account) }
+RSpec.describe ActivityPub::FollowersSynchronizationsController, :account do
   let!(:follower_example_com_user_a) { Fabricate(:account, domain: 'example.com', uri: 'https://example.com/users/a') }
   let!(:follower_example_com_user_b) { Fabricate(:account, domain: 'example.com', uri: 'https://example.com/users/b') }
   let!(:follower_foo_com_user_a) { Fabricate(:account, domain: 'foo.com', uri: 'https://foo.com/users/a') }

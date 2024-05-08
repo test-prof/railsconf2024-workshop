@@ -46,7 +46,7 @@ RSpec.describe RemoveStatusService do
       expect(redis).to have_received(:publish).with('timeline:public:media', Oj.dump(event: :delete, payload: status.id.to_s))
     end
 
-    it 'sends Delete activity to followers' do
+    it 'sends Delete activity to followers', sidekiq: :inline do
       subject.call(status)
       expect(a_request(:post, hank.inbox_url).with(
                body: hash_including({
@@ -60,7 +60,7 @@ RSpec.describe RemoveStatusService do
              )).to have_been_made.once
     end
 
-    it 'sends Delete activity to rebloggers' do
+    it 'sends Delete activity to rebloggers', sidekiq: :inline do
       subject.call(status)
       expect(a_request(:post, bill.inbox_url).with(
                body: hash_including({
@@ -74,7 +74,7 @@ RSpec.describe RemoveStatusService do
              )).to have_been_made.once
     end
 
-    it 'remove status from notifications' do
+    it 'remove status from notifications', sidekiq: :inline do
       expect { subject.call(status) }.to change {
         Notification.where(activity_type: 'Favourite', from_account: jeff, account: alice).count
       }.from(1).to(0)
@@ -85,7 +85,7 @@ RSpec.describe RemoveStatusService do
     let!(:original_status) { Fabricate(:status, account: alice, text: 'Hello ThisIsASecret', visibility: :private) }
     let!(:status) { ReblogService.new.call(alice, original_status) }
 
-    it 'sends Undo activity to followers' do
+    it 'sends Undo activity to followers', sidekiq: :inline do
       subject.call(status)
       expect(a_request(:post, hank.inbox_url).with(
                body: hash_including({
@@ -103,7 +103,7 @@ RSpec.describe RemoveStatusService do
     let!(:original_status) { Fabricate(:status, account: alice, text: 'Hello ThisIsASecret', visibility: :public) }
     let!(:status) { ReblogService.new.call(alice, original_status) }
 
-    it 'sends Undo activity to followers' do
+    it 'sends Undo activity to followers', sidekiq: :inline do
       subject.call(status)
       expect(a_request(:post, hank.inbox_url).with(
                body: hash_including({
@@ -121,7 +121,7 @@ RSpec.describe RemoveStatusService do
     let!(:original_status) { Fabricate(:status, account: bill, text: 'Hello ThisIsASecret', visibility: :public) }
     let!(:status) { ReblogService.new.call(alice, original_status) }
 
-    it 'sends Undo activity to followers' do
+    it 'sends Undo activity to followers', sidekiq: :inline do
       subject.call(status)
       expect(a_request(:post, bill.inbox_url).with(
                body: hash_including({

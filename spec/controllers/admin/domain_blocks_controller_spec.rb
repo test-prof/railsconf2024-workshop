@@ -192,7 +192,7 @@ RSpec.describe Admin::DomainBlocksController do
       let(:original_severity) { 'suspend' }
       let(:new_severity)      { 'silence' }
 
-      it 'changes the block severity, suspensions, and silences' do
+      it 'changes the block severity, suspensions, and silences', sidekiq: :inline do
         expect { subject }
           .to change_severity('suspend', 'silence')
           .and change_suspended(true, false)
@@ -204,7 +204,7 @@ RSpec.describe Admin::DomainBlocksController do
       let(:original_severity) { 'silence' }
       let(:new_severity)      { 'suspend' }
 
-      it 'changes the block severity, silences, and suspensions' do
+      it 'changes the block severity, silences, and suspensions', sidekiq: :inline do
         expect { subject }
           .to change_severity('silence', 'suspend')
           .and change_silenced(true, false)

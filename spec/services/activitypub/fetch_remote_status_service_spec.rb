@@ -257,7 +257,7 @@ RSpec.describe ActivityPub::FetchRemoteStatusService do
         end
       end
 
-      it 'creates at least some statuses' do
+      it 'creates at least some statuses', sidekiq: :inline do
         expect { subject.call(object[:id], prefetched_body: Oj.dump(object)) }.to change { sender.statuses.count }.by_at_least(2)
       end
 
@@ -309,7 +309,7 @@ RSpec.describe ActivityPub::FetchRemoteStatusService do
         end
       end
 
-      it 'creates at least some statuses' do
+      it 'creates at least some statuses', sidekiq: :inline do
         expect { subject.call(object[:id], prefetched_body: Oj.dump(object)) }.to change { sender.statuses.count }.by_at_least(2)
       end
 

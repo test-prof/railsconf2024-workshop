@@ -90,7 +90,7 @@ RSpec.describe MediaAttachment do
       media.destroy
     end
 
-    it 'saves media attachment with correct file metadata' do
+    it 'saves media attachment with correct file metadata', paperclip: :process do
       expect(media)
         .to be_persisted
         .and be_processing_complete
@@ -105,7 +105,7 @@ RSpec.describe MediaAttachment do
       expect(Rack::Mime.mime_type(extension, nil)).to eq content_type
     end
 
-    it 'saves media attachment with correct size metadata' do
+    it 'saves media attachment with correct size metadata', paperclip: :process do
       # strips original file name
       expect(media.file_file_name)
         .to_not start_with '600x400'
@@ -167,7 +167,7 @@ RSpec.describe MediaAttachment do
   describe 'animated gif' do
     let(:media) { Fabricate(:media_attachment, file: attachment_fixture('avatar.gif')) }
 
-    it 'sets correct file metadata' do
+    it 'sets correct file metadata', paperclip: :process do
       expect(media.type).to eq 'gifv'
       expect(media.file_content_type).to eq 'video/mp4'
       expect(media.file.meta['original']['width']).to eq 128
@@ -185,7 +185,7 @@ RSpec.describe MediaAttachment do
       context fixture[:filename] do
         let(:media) { Fabricate(:media_attachment, file: attachment_fixture(fixture[:filename])) }
 
-        it 'sets correct file metadata' do
+        it 'sets correct file metadata', paperclip: :process do
           expect(media.type).to eq 'image'
           expect(media.file_content_type).to eq 'image/gif'
           expect(media.file.meta['original']['width']).to eq fixture[:width]
@@ -199,7 +199,7 @@ RSpec.describe MediaAttachment do
   describe 'ogg with cover art' do
     let(:media) { Fabricate(:media_attachment, file: attachment_fixture('boop.ogg')) }
 
-    it 'sets correct file metadata' do
+    it 'sets correct file metadata', paperclip: :process do
       expect(media.type).to eq 'audio'
       expect(media.file.meta['original']['duration']).to be_within(0.05).of(0.235102)
       expect(media.thumbnail.present?).to be true
@@ -211,19 +211,19 @@ RSpec.describe MediaAttachment do
   describe 'mp3 with large cover art' do
     let(:media) { Fabricate(:media_attachment, file: attachment_fixture('boop.mp3')) }
 
-    it 'detects it as an audio file' do
+    it 'detects it as an audio file', paperclip: :process do
       expect(media.type).to eq 'audio'
     end
 
-    it 'sets meta for the duration' do
+    it 'sets meta for the duration', paperclip: :process do
       expect(media.file.meta['original']['duration']).to be_within(0.05).of(0.235102)
     end
 
-    it 'extracts thumbnail' do
+    it 'extracts thumbnail', paperclip: :process do
       expect(media.thumbnail.present?).to be true
     end
 
-    it 'gives the file a random name' do
+    it 'gives the file a random name', paperclip: :process do
       expect(media.file_file_name).to_not eq 'boop.mp3'
     end
   end
@@ -236,13 +236,13 @@ RSpec.describe MediaAttachment do
   end
 
   describe 'size limit validation' do
-    it 'rejects video files that are too large' do
+    it 'rejects video files that are too large', paperclip: :process do
       stub_const 'MediaAttachment::IMAGE_LIMIT', 100.megabytes
       stub_const 'MediaAttachment::VIDEO_LIMIT', 1.kilobyte
       expect { Fabricate(:media_attachment, file: attachment_fixture('attachment.webm')) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
-    it 'accepts video files that are small enough' do
+    it 'accepts video files that are small enough', paperclip: :process do
       stub_const 'MediaAttachment::IMAGE_LIMIT', 1.kilobyte
       stub_const 'MediaAttachment::VIDEO_LIMIT', 100.megabytes
       media = Fabricate(:media_attachment, file: attachment_fixture('attachment.webm'))

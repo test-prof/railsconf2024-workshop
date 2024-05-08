@@ -2,9 +2,7 @@
 
 require 'rails_helper'
 
-describe 'Accounts show response' do
-  let(:account) { Fabricate(:account) }
-
+describe 'Accounts show response', :account do
   context 'with an unapproved account' do
     before { account.user.update(approved: false) }
 
@@ -46,16 +44,16 @@ describe 'Accounts show response' do
 
   describe 'GET to short username paths' do
     context 'with existing statuses' do
-      let!(:status) { Fabricate(:status, account: account) }
-      let!(:status_reply) { Fabricate(:status, account: account, thread: Fabricate(:status)) }
-      let!(:status_self_reply) { Fabricate(:status, account: account, thread: status) }
-      let!(:status_media) { Fabricate(:status, account: account) }
-      let!(:status_pinned) { Fabricate(:status, account: account) }
-      let!(:status_private) { Fabricate(:status, account: account, visibility: :private) }
-      let!(:status_direct) { Fabricate(:status, account: account, visibility: :direct) }
-      let!(:status_reblog) { Fabricate(:status, account: account, reblog: Fabricate(:status)) }
+      let_it_be(:status) { Fabricate(:status, account: account) }
+      let_it_be(:status_reply) { Fabricate(:status, account: account, thread: Fabricate(:status)) }
+      let_it_be(:status_self_reply) { Fabricate(:status, account: account, thread: status) }
+      let_it_be(:status_media) { Fabricate(:status, account: account) }
+      let_it_be(:status_pinned) { Fabricate(:status, account: account) }
+      let_it_be(:status_private) { Fabricate(:status, account: account, visibility: :private) }
+      let_it_be(:status_direct) { Fabricate(:status, account: account, visibility: :direct) }
+      let_it_be(:status_reblog) { Fabricate(:status, account: account, reblog: Fabricate(:status)) }
 
-      before do
+      before_all do
         status_media.media_attachments << Fabricate(:media_attachment, account: account, type: :image)
         account.pinned_statuses << status_pinned
         account.pinned_statuses << status_private

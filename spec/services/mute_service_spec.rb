@@ -17,7 +17,7 @@ RSpec.describe MuteService do
       redis.del(home_timeline_key)
     end
 
-    it "clears account's statuses" do
+    it "clears account's statuses", sidekiq: :inline do
       FeedManager.instance.push_to_home(account, status)
       FeedManager.instance.push_to_home(account, other_account_status)
 

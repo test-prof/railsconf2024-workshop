@@ -2,9 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe ActivityPub::OutboxesController do
-  let!(:account) { Fabricate(:account) }
-
+RSpec.describe ActivityPub::OutboxesController, :account do
   before do
     Fabricate(:status, account: account, visibility: :public)
     Fabricate(:status, account: account, visibility: :unlisted)

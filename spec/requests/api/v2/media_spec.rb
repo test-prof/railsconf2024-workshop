@@ -12,7 +12,7 @@ RSpec.describe 'Media API' do
     context 'when small media format attachment is processed immediately' do
       let(:params) { { file: fixture_file_upload('attachment-jpg.123456_abcd', 'image/jpeg') } }
 
-      it 'returns http success' do
+      it 'returns http success', sidekiq: :inline, paperclip: :process do
         post '/api/v2/media', headers: headers, params: params
 
         expect(File.exist?(user.account.media_attachments.first.file.path(:small)))
@@ -29,7 +29,7 @@ RSpec.describe 'Media API' do
     context 'when large format media attachment has not been processed' do
       let(:params) { { file: fixture_file_upload('attachment.webm', 'video/webm') } }
 
-      it 'returns http accepted' do
+      it 'returns http accepted', sidekiq: :inline, paperclip: :process do
         post '/api/v2/media', headers: headers, params: params
 
         expect(File.exist?(user.account.media_attachments.first.file.path(:small)))

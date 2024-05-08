@@ -33,7 +33,7 @@ RSpec.describe UnfollowService do
       expect(sender.following?(bob)).to be false
     end
 
-    it 'sends an unfollow activity' do
+    it 'sends an unfollow activity', sidekiq: :inline do
       expect(a_request(:post, 'http://example.com/inbox')).to have_been_made.once
     end
   end
@@ -51,7 +51,7 @@ RSpec.describe UnfollowService do
       expect(bob.following?(sender)).to be false
     end
 
-    it 'sends a reject activity' do
+    it 'sends a reject activity', sidekiq: :inline do
       expect(a_request(:post, 'http://example.com/inbox')).to have_been_made.once
     end
   end

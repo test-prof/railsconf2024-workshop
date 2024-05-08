@@ -38,7 +38,7 @@ RSpec.describe FanOutOnWriteService do
       expect(home_feed_of(alice)).to include status.id
     end
 
-    it 'is added to the home feed of a follower' do
+    it 'is added to the home feed of a follower', sidekiq: :inline do
       expect(home_feed_of(bob)).to include status.id
       expect(home_feed_of(tom)).to include status.id
     end
@@ -62,7 +62,7 @@ RSpec.describe FanOutOnWriteService do
       expect(home_feed_of(alice)).to include status.id
     end
 
-    it 'is added to the home feed of the mentioned follower' do
+    it 'is added to the home feed of the mentioned follower', sidekiq: :inline do
       expect(home_feed_of(bob)).to include status.id
     end
 
@@ -83,7 +83,7 @@ RSpec.describe FanOutOnWriteService do
       expect(home_feed_of(alice)).to include status.id
     end
 
-    it 'is added to the home feed of a follower' do
+    it 'is added to the home feed of a follower', sidekiq: :inline do
       expect(home_feed_of(bob)).to include status.id
       expect(home_feed_of(tom)).to include status.id
     end
@@ -101,7 +101,7 @@ RSpec.describe FanOutOnWriteService do
       expect(home_feed_of(alice)).to include status.id
     end
 
-    it 'is added to the home feed of the mentioned follower' do
+    it 'is added to the home feed of the mentioned follower', sidekiq: :inline do
       expect(home_feed_of(bob)).to include status.id
     end
 
